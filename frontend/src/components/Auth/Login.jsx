@@ -1,24 +1,47 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
+import styled from 'styled-components'
 import { AuthContext } from '../../context/AuthContext'
 
 function Login() {
   console.log("%cLogin Component rendered", "background-color: yellow")
 
+  const { loginUser } = useContext(AuthContext)
+
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    await loginUser(username, password)
+  }
+
   return (
-    <div>
-      <form>
+    <Container>
+      <form onSubmit={handleSubmit}>
         <input 
           type="text"
           placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(prev => e.target.value)}
         />
         <input 
           type="password"
           placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(prev => e.target.value)}
         />
         <button>Login</button>
       </form>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  margin-top: 50px;
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+`
 
 export default Login
