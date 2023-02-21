@@ -5,14 +5,14 @@ import { AuthContext } from '../../context/AuthContext'
 function Login() {
   console.log("%cLogin Component rendered", "background-color: yellow")
 
-  const { loginUser } = useContext(AuthContext)
+  const { loginUser, getUser } = useContext(AuthContext)
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault()
-    await loginUser(username, password)
+    loginUser(username, password)
   }
 
   return (

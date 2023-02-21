@@ -1,5 +1,4 @@
 import axios from "axios"
 
-console.log("Axios Settings Installed")
-
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = 'http://localhost:8000'
+// axios.defaults.headers['Authorization'] = JSON.parse(localStorage.getItem("authTokens")).access

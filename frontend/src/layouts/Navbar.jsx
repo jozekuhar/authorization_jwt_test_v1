@@ -1,15 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from "react-router-dom"
 import styled from "styled-components"
+import { AuthContext } from '../context'
 
 function Navbar() {
+  const { user, logoutUser } = useContext(AuthContext)
+
   return (
     <Container>
-      <Link to="/">Home</Link>
-      <Link to="/protected">Protected</Link>
-      <Link to="/unprotected">Unprotected</Link>
-      <Link to="/login">Login</Link>
-      <Link to="/register">Register</Link>
+      {user && <Link to="/">Home</Link>}
+      {user && <Link to="/protected">Protected</Link>}
+      {user && <Link onClick={logoutUser}>Logout</Link>}
+      {!user && <Link to="/unprotected">Unprotected</Link>}
+      {!user && <Link to="/login">Login</Link>}
+      {!user && <Link to="/register">Register</Link>}
     </Container>
   )
 }

@@ -5,16 +5,16 @@ import { AuthContext } from '../../context/AuthContext'
 function Register() {
   console.log("%cRegister Component rendered", "background-color: yellow")
 
-  const { registerUser } = useContext(AuthContext)
+  const { registerUser, loginUser } = useContext(AuthContext) 
 
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rePassword, setRePassword] = useState("")
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault()
-    await registerUser(username, email, password, rePassword)
+    registerUser(username, email, password, rePassword)
   }
 
   return (
