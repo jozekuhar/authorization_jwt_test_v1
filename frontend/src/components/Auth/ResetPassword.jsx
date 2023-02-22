@@ -1,23 +1,36 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import { AuthContext } from '../../context/AuthContext'
-import { Spinner } from "../../utils"
+import React, { useState } from 'react'
+import { Link, useNavigate } from "react-router-dom"
+import { Spinner } from '../../utils'
+import styled from 'styled-components'
+import axios from 'axios'
 
-function Register() {
-  console.log("%cRegister Component rendered", "background-color: yellow")
+function ResetPassword() {
+  console.log("%cReset Password Component rendered", "background-color: yellow")
 
-  const { registerUser, loginUser, loading, error} = useContext(AuthContext)
+  const navigate = useNavigate()
 
-  const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [rePassword, setRePassword] = useState("")
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e) {
+  async function resetPassword(email) {
+    try {
+      setLoading(true)
+      const url = "/accounts/auth/users/reset_password/"
+      const response = await axios.post(url, {
+        email: email
+      })
+      navigate("/reset/sent")
+    } catch(error) {
+      setError(error.response.data)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleSubmit(e) {
     e.preventDefault()
-    await registerUser(username, email, password, rePassword)
-    loginUser(username, password)
+    resetPassword(email)
   }
 
   if (loading) {
@@ -30,40 +43,18 @@ function Register() {
 
   return (
     <Container>
-      <Title>REGISTER</Title>
+      <Title>RESET PASSWORD</Title>
       <form onSubmit={handleSubmit}>
         <input 
           type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(prev => e.target.value)}
-        />
-        <ErrorMessage>{error && error.username}</ErrorMessage>
-        <input 
-          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(prev => e.target.value)}
         />
-        
-        <input 
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(prev => e.target.value)}
-        />
-        <ErrorMessage>{error && error.password}</ErrorMessage>
-        <input 
-          type="password"
-          placeholder="Retype Password"
-          value={rePassword}
-          onChange={(e) => setRePassword(prev => e.target.value)}
-        />
-        <ErrorMessage>{error && error.re_password}</ErrorMessage>
-        <ErrorMessage>{error && error.non_field_errors}</ErrorMessage>
-        <button>REGISTER</button>
+        <ErrorMessage>{error && error.email}</ErrorMessage>
+        <button>RESET PASSWORD</button>
       </form>
-      <Link to="/login">Already have an account?</Link>
+      <Link to="/login">Login instead?</Link>
     </Container>
   )
 }
@@ -83,8 +74,9 @@ const Container = styled.div`
       font-size: 18px;
       margin-top: 15px;
       text-align: center;
-      background-color: #FFFFFF;
+      background-color: "#FFFFFF";
       border: none;
+      /* border: 2px solid #BF3100; */
       box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
       border-radius: 10px;
       height: 54px;
@@ -130,4 +122,4 @@ const ErrorMessage = styled.span`
   color: #932600;
 `
 
-export default Register
+export default ResetPassword

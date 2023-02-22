@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../context'
 import Navbar from '../layouts/Navbar'
 
 function Home() {
   console.log("%cHome Component rendered", "background-color: yellow")
 
+  const { user } = useContext(AuthContext)
+
+  console.log(user)
+
   return (
     <>
-     <div>Home</div>
+     <div>{user.username}</div>
     </>
   )
 }

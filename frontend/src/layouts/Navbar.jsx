@@ -6,21 +6,22 @@ import { AuthContext } from '../context'
 function Navbar() {
   const { user, logoutUser } = useContext(AuthContext)
 
+  if (!user) {
+    return <></>
+  }
+
   return (
     <Container>
-      {user && <Link to="/">Home</Link>}
-      {user && <Link to="/protected">Protected</Link>}
-      {user && <Link onClick={logoutUser}>Logout</Link>}
-      {!user && <Link to="/unprotected">Unprotected</Link>}
-      {!user && <Link to="/login">Login</Link>}
-      {!user && <Link to="/register">Register</Link>}
+      <Link to="/">Home</Link>
+      <Link to="/protected">Protected</Link>
+      <Link onClick={logoutUser}>Logout</Link>
     </Container>
   )
 }
 
 const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
+  height: 60px;
+  background-color: #D76A03;
 `
 
 export default Navbar

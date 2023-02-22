@@ -11,16 +11,21 @@ function AuthProvider({children}) {
   const navigate = useNavigate()
   const [firstVisit, setFirstVisit] = useState(true)
   const [user, setUser] = useState(null)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   async function registerUser(username, email, password, re_password) {
     try {
+      setLoading(true)
       const url = "/accounts/auth/users/"
       const response = await axios.post(url, {
         username: username, email: email, password: password, re_password: re_password
       })
-      console.log(response)
+      console.log("registration completed")
     } catch(error) {
-      console.log(error)
+      setError(error.response.data)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -34,7 +39,7 @@ function AuthProvider({children}) {
       await getUser() // počaka da se izvede getUser funkcija
       navigate("/") // navigira na homepage (user je nastavljen) // sproži še en render
     } catch(error) {
-      console.log(error)
+      setError(error.response.data)
     }
   }
 
@@ -96,7 +101,8 @@ function AuthProvider({children}) {
     loginUser: loginUser,
     logoutUser: logoutUser,
     registerUser: registerUser,
-    getUser: getUser,
+    loading: loading,
+    error: error,
   }
 
   return (

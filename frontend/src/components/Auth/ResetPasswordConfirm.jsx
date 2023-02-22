@@ -1,43 +1,61 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from "react-router-dom"
+import { useNavigate, useParams } from 'react-router'
 import styled from 'styled-components'
-import { AuthContext } from '../../context/AuthContext'
+import axios from "axios"
+import { Spinner } from '../../utils'
 
-function Login() {
-  console.log("%cLogin Component rendered", "background-color: yellow")
+function ResetPasswordConfirm() {
+  const { uid, token } = useParams()
+  const navigate = useNavigate()
 
-  const { loginUser, error } = useContext(AuthContext)
+  const [newPassword, setNewPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  async function confirmPassword(new_password) {
+    try {
+      setLoading(true)
+      const url = "/accounts/auth/users/reset_password_confirm/"
+      const response = await axios.post(url, {
+        uid: uid,
+        token: token,
+        new_password: new_password,
+      })
+      navigate("/login")
+    } catch(error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   function handleSubmit(e) {
     e.preventDefault()
-    loginUser(username, password)
+    confirmPassword(newPassword)
   }
 
+  if (loading) {
+    return (
+      <Container>
+        <Spinner />
+      </Container>
+    )
+  }
+
+
   return (
-    <Container>
-      <Title>LOGIN</Title>
+     <Container>
+      <Title>CONFIRM NEW PASSWORD</Title>
       <form onSubmit={handleSubmit}>
         <input 
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(prev => e.target.value)}
-        />
-        <ErrorMessage>{error && error.username}</ErrorMessage>
-        <input 
           type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(prev => e.target.value)}
+          placeholder="New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(prev => e.target.value)}
         />
-        <ErrorMessage>{error && error.password}</ErrorMessage>
-        <button>LOG IN</button>
+        <button>CONFIRM NEW PASSWORD</button>
       </form>
-      <Link to="/register">Don't have an account?</Link>
-      <Link to="/reset">Forgotten Password?</Link>
+      <Link to="/login">Login instead?</Link>
     </Container>
   )
 }
@@ -105,4 +123,4 @@ const ErrorMessage = styled.span`
   color: #932600;
 `
 
-export default Login
+export default ResetPasswordConfirm
